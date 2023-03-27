@@ -1,0 +1,25 @@
+{
+  "name": "2023_profiler_project",
+  "version": "0.0.1",
+  "description": "This is a project to make a profiler with node.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/songhj0427/2023_profiler_project.git"
+  },
+  "author": "HardCoder",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/songhj0427/2023_profiler_project/issues"
+  },
+  "homepage": "https://github.com/songhj0427/2023_profiler_project#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
