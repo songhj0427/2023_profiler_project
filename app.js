@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 
 //받은 파일을 multer에 지정된 디렉터리위치에 filename으로 저장함.
 app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
-  var filepath = path.join(__dirname, "/data/inputFile.txt");
+  var filepath = path.join(__dirname, "/data/", req.file.originalname);
   var instream = fs.createReadStream(filepath);
   var reader = readline.createInterface(instream, process.stdout);
   res.send("파일 받음");
