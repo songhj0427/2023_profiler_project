@@ -1,20 +1,26 @@
 var express = require("express");
 var path = require("path");
 var multer = require("multer");
-var mysql = require("mysql");
+//var mysql = require("mysql");
 var fs = require("fs");
 var readline = require("readline");
 
 app = express();
 app.set("port", process.env.PORT || 3000);
 
-var connection = mysql.createConnection({
+try {
+  fs.readdirSync("data");
+} catch (err) {
+  console.error("data 폴더가 없어 uploads 폴더를 생성합니다.");
+  fs.mkdirSync("data");
+}
+/*var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "fjdkslvn107!",
   database: "nodejs",
 });
-connection.connect();
+connection.connect();*/
 
 var upload = multer({
   storage: multer.diskStorage({
@@ -35,9 +41,8 @@ app.get("/", (req, res) => {
 
 //받은 파일을 multer에 지정된 디렉터리위치에 filename으로 저장함.
 app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
-  console.log(res.file.originalname);
-  var filename = "./data/index.html";
-  var instream = fs.createReadStream(filename);
+  var filepath = path.join(__dirname, "/data/inputFile.txt");
+  var instream = fs.createReadStream(filepath);
   var reader = readline.createInterface(instream, process.stdout);
   res.send("파일 받음");
 });
