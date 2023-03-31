@@ -70,8 +70,14 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
         for (var i = 1; i < tokens.length - 1; i++) {
           taskNumber = i;
           var sql =
-            "INSERT INTO core_stats (case_number, core_number, task_number, data) VALUES (?, ?, ?, ?)";
-          var values = [caseNumber, coreNumber, taskNumber, tokens[i]];
+            "INSERT INTO core_stats (case_number, core_number, task_number, data) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE data = ?";
+          var values = [
+            caseNumber,
+            coreNumber,
+            taskNumber,
+            tokens[i],
+            tokens[i],
+          ];
           connection.query(sql, values, (err, res) => {
             if (err) {
               console.error("data 저장에 실패했습니다.");
