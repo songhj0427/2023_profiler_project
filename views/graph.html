@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  </head>
+  <body>
+    <div id="chart-container"></div>
+    <button type="button" onclick="showTaskData(1)">Task2</button>
+  </body>
+  <script>
+    (coreNumber = 5), (taskNumber = 5);
+    var taskData = "{{ taskData }}".split(",").map(Number);
+    var coreData = "{{ coreData }}".split(",").map(Number);
+    var newTaskData = [];
+    var newCoreData = [];
+
+    for (var i = 0; i < 5; i++) {
+      taskList = [];
+      for (var j = 0; j < 4; j++) {
+        taskStartNumber = coreNumber * taskNumber * j + i * coreNumber;
+        taskList.push(
+          taskData
+            .slice(taskStartNumber, taskStartNumber + coreNumber)
+            .map((num) => Math.round(num))
+        );
+      }
+      newTaskData.push(taskList);
+    }
+    for (var i = 0; i < 5; i++) {
+      coreList = [];
+      for (var j = 0; j < 4; j++) {
+        coreStartNumber = coreNumber * taskNumber * j + i * taskNumber;
+        coreList.push(
+          coreData.slice(coreStartNumber, coreStartNumber + taskNumber)
+        );
+      }
+      newCoreData.push(coreList);
+    }
+    function showTaskData(n) {
+      var options = {
+        chart: {
+          type: "line",
+        },
+        title: {
+          text: `Task${n + 1}의 Core별 통계`,
+        },
+        xAxis: {
+          categories: ["Core1", "Core2", "Core3", "Core4", "Core5"],
+        },
+        yAxis: {
+          text: "Value",
+        },
+        series: [
+          {
+            name: "MAX",
+            data: newTaskData[n][0],
+          },
+          {
+            name: "MIN",
+            data: newTaskData[n][1],
+          },
+          {
+            name: "AVG",
+            data: newTaskData[n][2],
+          },
+          {
+            name: "STD",
+            data: newTaskData[n][3],
+          },
+        ],
+      };
+      Highcharts.chart("chart-container", options);
+    }
+    function showCoreData(n) {
+      var options = {
+        chart: {
+          type: "line",
+        },
+        title: {
+          text: `Core${n + 1}의 Task별 통계`,
+        },
+        xAxis: {
+          categories: ["Task1", "Task2", "Task3", "Task4", "Task5"],
+        },
+        yAxis: {
+          text: "Value",
+        },
+        series: [
+          {
+            name: "MAX",
+            data: newCoreData[n][0],
+          },
+          {
+            name: "MIN",
+            data: newCoreData[n][1],
+          },
+          {
+            name: "AVG",
+            data: newCoreData[n][2],
+          },
+          {
+            name: "STD",
+            data: newCoreData[n][3],
+          },
+        ],
+      };
+      Highcharts.chart("chart-container", options);
+    }
+  </script>
+</html>
