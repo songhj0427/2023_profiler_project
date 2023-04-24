@@ -1,15 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
+    <link rel="stylesheet" href="/graphDesign.css" />
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <meta charset="utf-8" />
+    <title>File Uploads</title>
   </head>
   <body>
-    <div id="chart-container"></div>
-    <button type="button" onclick="showTaskData(1)">Task2</button>
+    <div id="container"><h1 class="headerstyle">Hard Coder</h1></div>
+    <div class="graph">
+      <div id="chart-container"></div>
+    </div>
+    <h1 id="unit">작업단위</h1>
+    <div class="tcbutton">
+      <ul class="TCbtn">
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showTaskData(0)">
+            Task1
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showTaskData(1)">
+            Task2
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showTaskData(2)">
+            Task3
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showTaskData(3)">
+            Task4
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showTaskData(4)">
+            Task5
+          </a>
+        </li>
+      </ul>
+    </div>
+    <h1 id="unit">코어단위</h1>
+    <div class="tcbutton">
+      <ul class="TCbtn">
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showCoreData(0)">
+            Core1
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showCoreData(1)">
+            Core2
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showCoreData(2)">
+            Core3
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showCoreData(3)">
+            Core4
+          </a>
+        </li>
+        <li class="TCbtn-item">
+          <a
+            href="#"
+            class="TCbtn-link"
+            type="button"
+            onclick="showCoreData(4)">
+            Core5
+          </a>
+        </li>
+      </ul>
+    </div>
   </body>
+
   <script>
     (coreNumber = 5), (taskNumber = 5);
     var taskData = "{{ taskData }}".split(",").map(Number);
@@ -34,7 +140,9 @@
       for (var j = 0; j < 4; j++) {
         coreStartNumber = coreNumber * taskNumber * j + i * taskNumber;
         coreList.push(
-          coreData.slice(coreStartNumber, coreStartNumber + taskNumber)
+          coreData
+            .slice(coreStartNumber, coreStartNumber + taskNumber)
+            .map((num) => Math.round(num))
         );
       }
       newCoreData.push(coreList);

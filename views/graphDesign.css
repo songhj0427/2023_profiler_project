@@ -1,0 +1,115 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald); /* 타이틀 폰트 */
+
+/* 타이틀 */
+#container {
+  margin: 0 auto;
+  max-width: 520px;
+  text-align: center;
+}
+
+#container h1 {
+  font-weight: normal;
+  text-transform: uppercase;
+  margin: 0.3125em 0;
+  background-color: white;
+  position: relative;
+  display: inline-block;
+  padding: 0 10px;
+}
+
+.headerstyle {
+  font-family: "Oswald", sans-serif;
+}
+.headerstyle:before {
+  content: "";
+  border-top: 1px solid black;
+  position: absolute;
+  width: 300%;
+  top: 35%;
+  left: -100%;
+  z-index: -999;
+}
+.headerstyle:after {
+  content: "";
+  border-bottom: 1px solid black;
+  position: absolute;
+  width: 300%;
+  bottom: 35%;
+  left: -100%;
+  z-index: -999;
+}
+/* 타이틀 */
+
+.subtitle {
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #ffffff;
+  width: 400px;
+  height: 30px;
+  position: relative;
+}
+
+.graph {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  border: 1px solid #000000;
+  width: 1200px;
+  height: 400px;
+  position: relative; /*center 클래스하고 같이 쓰이는거 */
+}
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+} /* '그래프' 글자 가운데 맞출려고 임의로 쓴 클래스임 */
+
+.tcbutton {
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #ffffff;
+  width: 1200px;
+  height: 55px;
+  position: relative;
+}
+#unit {
+  text-align: center;
+}
+
+/* 버튼 */
+body,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+ul,
+li {
+  list-style: none; /* 옆에 달리는 점 없애줌 */
+}
+.TCbtn {
+  display: flex;
+}
+.TCbtn-item {
+  background-color: rgb(0, 0, 0);
+  flex-grow: 1;
+  transition: 0.5s;
+}
+.TCbtn-item:hover {
+  background-color: rgb(17, 74, 179);
+  flex-grow: 1.2;
+}
+.TCbtn-link {
+  display: block;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none; /* 밑줄 없애줌 */
+  text-align: center;
+}
+.TCbtn-link:hover {
+  color: white;
+}
+/* 버튼 */
