@@ -1,10 +1,10 @@
-var express = require("express");
-var path = require("path");
-var multer = require("multer");
-var mysql = require("mysql");
-var fs = require("fs");
-var readline = require("readline");
-var cons = require("consolidate");
+const express = require("express");
+const path = require("path");
+const multer = require("multer");
+const mysql = require("mysql");
+const fs = require("fs");
+const readline = require("readline");
+const cons = require("consolidate");
 
 app = express();
 app.set("port", process.env.PORT || 3000);
@@ -16,7 +16,7 @@ app.engine("html", cons.mustache);
 app.set("view engine", "html");
 app.set("views", __dirname + "/views");
 //mysql 설정
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "q1w2e3r4q1w2",
@@ -36,13 +36,13 @@ try {
   fs.mkdirSync("data");
 }
 
-var upload = multer({
+const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, done) => {
       done(null, "data/");
     },
     filename: (req, file, done) => {
-      var ext = path.extname(file.originalname);
+      const ext = path.extname(file.originalname);
       done(null, path.basename(file.originalname, ext) + ext);
     },
   }),
@@ -62,18 +62,18 @@ app.get("*.css", function (req, res, next) {
 app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
   //req.file.originalname
   function processFile(filename) {
-    var caseNumber = 0,
+    let caseNumber = 0,
       coreNumber = 0,
       taskNumber = 0;
-    var filepath = path.join(__dirname, "/data/", filename);
-    var reader = readline.createInterface({
+    const filepath = path.join(__dirname, "/data/", filename);
+    const reader = readline.createInterface({
       input: fs.createReadStream(filepath),
       output: process.stdout,
     });
 
     //file을 한 줄씩 읽어서 토큰별로 분리함.
     reader.on("line", (line) => {
-      var tokens = line.split("\t");
+      const tokens = line.split("\t");
       if (tokens != undefined && tokens.length > 0) {
         //tokens[1]에 task1이 있을 경우 case의 시작 부분임
         if (tokens[1] == "task1") {
@@ -82,10 +82,10 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
         } else {
           coreNumber += 1;
           //마지막 부분에 blank값이 저장되어 있음. 그래서 length - 1 전까지 돌아야함.
-          for (var i = 1; i < tokens.length - 1; i++) {
+          for (let i = 1; i < tokens.length - 1; i++) {
             taskNumber = i;
-            var sql = `INSERT INTO core_stats (case_number, core_number, task_number, data) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE data = ?`;
-            var values = [
+            const sql = `INSERT INTO core_stats (case_number, core_number, task_number, data) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE data = ?`;
+            const values = [
               caseNumber,
               coreNumber,
               taskNumber,
@@ -106,7 +106,7 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
     reader.on("close", () => {
       console.log("파일 처리 완료");
 
-      var sql = `SELECT MAX(data), MIN(data), AVG(data), STD(data) FROM core_stats WHERE task_number=1 GROUP BY core_number UNION ALL 
+      const sql = `SELECT MAX(data), MIN(data), AVG(data), STD(data) FROM core_stats WHERE task_number=1 GROUP BY core_number UNION ALL 
       SELECT MAX(data), MIN(data), AVG(data), STD(data) FROM core_stats WHERE task_number=2 GROUP BY core_number UNION ALL
       SELECT MAX(data), MIN(data), AVG(data), STD(data) FROM core_stats WHERE task_number=3 GROUP BY core_number UNION ALL
       SELECT MAX(data), MIN(data), AVG(data), STD(data) FROM core_stats WHERE task_number=4 GROUP BY core_number UNION ALL
@@ -119,21 +119,21 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
       connection.query(sql, (error, results, fields) => {
         if (error) console.error("데이터 불러오기에 실패했습니다...");
 
-        var taskMaxData = [];
-        var coreMaxData = [];
-        var taskMinData = [];
-        var coreMinData = [];
-        var taskAvgData = [];
-        var coreAvgData = [];
-        var taskStdData = [];
-        var coreStdData = [];
-        var taskData = [];
-        var coreData = [];
+        let taskMaxData = [];
+        let coreMaxData = [];
+        let taskMinData = [];
+        let coreMinData = [];
+        let taskAvgData = [];
+        let coreAvgData = [];
+        let taskStdData = [];
+        let coreStdData = [];
+        let taskData = [];
+        let coreData = [];
 
-        var result = Object.values(results);
+        const result = Object.values(results);
 
-        for (var i = 0; i < result.length; i++) {
-          var row = result[i];
+        for (let i = 0; i < result.length; i++) {
+          const row = result[i];
           if (i < 25) {
             taskMaxData.push(row["MAX(data)"]);
             taskMinData.push(row["MIN(data)"]);
