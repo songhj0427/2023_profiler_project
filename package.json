@@ -74,6 +74,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.2.0",
     "negotiator": "^0.6.3",
+    "node-kmeans": "^1.1.9",
     "nopt": "^1.0.10",
     "normalize-path": "^3.0.0",
     "nunjucks": "^3.2.3",

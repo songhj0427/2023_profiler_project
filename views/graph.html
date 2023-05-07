@@ -22,7 +22,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showTaskData(0)">
+            onclick="showTaskClusterData()"
+          >
             Task1
           </a>
         </li>
@@ -31,7 +32,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showTaskData(1)">
+            onclick="showTaskData(1)"
+          >
             Task2
           </a>
         </li>
@@ -40,7 +42,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showTaskData(2)">
+            onclick="showTaskData(2)"
+          >
             Task3
           </a>
         </li>
@@ -49,7 +52,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showTaskData(3)">
+            onclick="showTaskData(3)"
+          >
             Task4
           </a>
         </li>
@@ -58,7 +62,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showTaskData(4)">
+            onclick="showTaskData(4)"
+          >
             Task5
           </a>
         </li>
@@ -72,7 +77,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showCoreData(0)">
+            onclick="showCoreData(0)"
+          >
             Core1
           </a>
         </li>
@@ -81,7 +87,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showCoreData(1)">
+            onclick="showCoreData(1)"
+          >
             Core2
           </a>
         </li>
@@ -90,7 +97,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showCoreData(2)">
+            onclick="showCoreData(2)"
+          >
             Core3
           </a>
         </li>
@@ -99,7 +107,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showCoreData(3)">
+            onclick="showCoreData(3)"
+          >
             Core4
           </a>
         </li>
@@ -108,7 +117,8 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showCoreData(4)">
+            onclick="showCoreData(4)"
+          >
             Core5
           </a>
         </li>
@@ -118,15 +128,15 @@
 
   <script>
     (coreNumber = 5), (taskNumber = 5);
-    var taskData = "{{ taskData }}".split(",").map(Number);
-    var coreData = "{{ coreData }}".split(",").map(Number);
-    var newTaskData = [];
-    var newCoreData = [];
+    const taskData = "{{ taskData }}".split(",").map(Number);
+    const coreData = "{{ coreData }}".split(",").map(Number);
+    let newTaskData = [];
+    let newCoreData = [];
 
-    for (var i = 0; i < 5; i++) {
-      taskList = [];
-      for (var j = 0; j < 4; j++) {
-        taskStartNumber = coreNumber * taskNumber * j + i * coreNumber;
+    for (let i = 0; i < 5; i++) {
+      let taskList = [];
+      for (let j = 0; j < 4; j++) {
+        let taskStartNumber = coreNumber * taskNumber * j + i * coreNumber;
         taskList.push(
           taskData
             .slice(taskStartNumber, taskStartNumber + coreNumber)
@@ -135,10 +145,10 @@
       }
       newTaskData.push(taskList);
     }
-    for (var i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       coreList = [];
-      for (var j = 0; j < 4; j++) {
-        coreStartNumber = coreNumber * taskNumber * j + i * taskNumber;
+      for (let j = 0; j < 4; j++) {
+        let coreStartNumber = coreNumber * taskNumber * j + i * taskNumber;
         coreList.push(
           coreData
             .slice(coreStartNumber, coreStartNumber + taskNumber)
@@ -212,6 +222,187 @@
           {
             name: "STD",
             data: newCoreData[n][3],
+          },
+        ],
+      };
+      Highcharts.chart("chart-container", options);
+    }
+    const clusters = "{{ clusters }}".split(",").map(Number);
+    const clusterIDs = "{{ clusterIDs }}".split(",").map(Number);
+    const clusterCnt = "{{ clusterCnt }}".split(",").map(Number);
+    let veryLow = [],
+      low = [],
+      medium = [],
+      high = [],
+      veryHigh = [];
+    let index = 0;
+    for (let i = 0; i < clusterCnt.length; i++) {
+      for (let j = 0; j < clusterCnt[i]; j++) {
+        if (i == 0) {
+          veryLow.push([clusters[index], clusterIDs[index]]);
+        } else if (i == 1) {
+          low.push([clusters[index], clusterIDs[index]]);
+        } else if (i == 2) {
+          medium.push([clusters[index], clusterIDs[index]]);
+        } else if (i == 3) {
+          high.push([clusters[index], clusterIDs[index]]);
+        } else if (i == 4) {
+          veryHigh.push([clusters[index], clusterIDs[index]]);
+        }
+        index += 1;
+      }
+    }
+    function getData(n, which) {
+      let dataSet;
+      let ret = new Array();
+      if (n == 0) {
+        dataSet = veryLow;
+      } else if (n == 1) {
+        dataSet = low;
+      } else if (n == 2) {
+        dataSet = medium;
+      } else if (n == 3) {
+        dataSet = high;
+      } else if (n == 4) {
+        dataSet = veryHigh;
+      }
+      for (let i = 0; i < dataSet.length; i++) {
+        let num = dataSet[i][1] % 25;
+        let value = dataSet[i][0];
+        let temp;
+        if (which == 0) {
+          temp = {
+            x: num % 5,
+            coreNum: Math.floor(num / 5),
+            y: value,
+          };
+        } else if (which == 1) {
+          temp = {
+            taskNum: num % 5,
+            x: Math.floor(num / 5),
+            y: value,
+          };
+        }
+        ret.push(temp);
+      }
+      return ret;
+    }
+    let veryLowTask = getData(0, 0),
+      lowTask = getData(1, 0),
+      mediumTask = getData(2, 0),
+      highTask = getData(3, 0),
+      veryHighTask = getData(4, 0);
+    let veryLowCore = getData(0, 1),
+      lowCore = getData(1, 1),
+      mediumCore = getData(2, 1),
+      highCore = getData(3, 1),
+      veryHighCore = getData(4, 1);
+
+    function showTaskClusterData() {
+      var options = {
+        chart: {
+          type: "scatter",
+        },
+        title: {
+          text: `Task별 Clustering Data`,
+        },
+        xAxis: {
+          categories: ["Task1", "Task2", "Task3", "Task4", "Task5"],
+        },
+        yAxis: {
+          text: "Value",
+        },
+        plotOptions: {
+          scatter: {
+            showInLegend: false,
+            jitter: {
+              x: 0.24,
+              y: 0,
+            },
+            marker: {
+              radius: 2,
+              symbol: "circle",
+            },
+            tooltip: {
+              pointFormat: `TaskNum : {point.x}, CoreNum : {point.coreNum}`,
+            },
+          },
+        },
+        series: [
+          {
+            name: "VeryLow",
+            data: veryLowTask,
+          },
+          {
+            name: "Low",
+            data: lowTask,
+          },
+          {
+            name: "Medium",
+            data: mediumTask,
+          },
+          {
+            name: "High",
+            data: highTask,
+          },
+          {
+            name: "VeryHigh",
+            data: veryHighTask,
+          },
+        ],
+      };
+      Highcharts.chart("chart-container", options);
+    }
+    function showCoreClusterData() {
+      var options = {
+        chart: {
+          type: "scatter",
+        },
+        title: {
+          text: `Core별 Clustering Data`,
+        },
+        xAxis: {
+          categories: ["Core1", "Core2", "Core3", "Core4", "Core5"],
+        },
+        yAxis: {
+          text: "Value",
+        },
+        plotOptions: {
+          scatter: {
+            showInLegend: false,
+            jitter: {
+              x: 0.24,
+              y: 0,
+            },
+            marker: {
+              radius: 2,
+              symbol: "circle",
+            },
+            tooltip: {
+              pointFormat: `TaskNum : {point.taskNum}, CoreNum : {point.x}`,
+            },
+          },
+        },
+        series: [
+          {
+            name: "VeryLow",
+            data: veryLowCore,
+          },
+          {
+            name: "Low",
+            data: lowCore,
+          },
+          {
+            name: "Medium",
+            data: mediumCore,
+          },
+          {
+            name: "High",
+            data: highCore,
+          },
+          {
+            name: "VeryHigh",
+            data: veryHighCore,
           },
         ],
       };

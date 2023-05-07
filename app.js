@@ -5,6 +5,7 @@ const mysql = require("mysql");
 const fs = require("fs");
 const readline = require("readline");
 const cons = require("consolidate");
+const kmeans = require("node-kmeans");
 
 app = express();
 app.set("port", process.env.PORT || 3000);
@@ -60,6 +61,7 @@ app.get("*.css", function (req, res, next) {
 
 //받은 파일을 multer에 지정된 디렉터리위치에 filename으로 저장함.
 app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
+  let vectors = new Array();
   //req.file.originalname
   function processFile(filename) {
     let caseNumber = 0,
@@ -73,6 +75,7 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
 
     //file을 한 줄씩 읽어서 토큰별로 분리함.
     reader.on("line", (line) => {
+      let index = 0;
       const tokens = line.split("\t");
       if (tokens != undefined && tokens.length > 0) {
         //tokens[1]에 task1이 있을 경우 case의 시작 부분임
@@ -92,6 +95,7 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
               tokens[i],
               tokens[i],
             ];
+            vectors.push([parseInt(tokens[i])]);
             connection.query(sql, values, (err, res) => {
               if (err) {
                 console.error("data 저장에 실패했습니다.");
@@ -149,9 +153,27 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
         taskData.push(taskMaxData, taskMinData, taskAvgData, taskStdData);
         coreData.push(coreMaxData, coreMinData, coreAvgData, coreStdData);
 
-        res.render("graph", {
-          taskData,
-          coreData,
+        kmeans.clusterize(vectors, { k: 5 }, (errClus, resClus) => {
+          let clusters = [],
+            clusterIDs = [],
+            clusterCnt = [];
+          if (errClus) console.error(errClus);
+          else {
+            resClus.sort((a, b) => a.centroid - b.centroid);
+            for (let i = 0; i < resClus.length; i++) {
+              clusters.push(resClus[i].cluster);
+              clusterIDs.push(resClus[i].clusterInd);
+              clusterCnt.push(resClus[i].cluster.length);
+            }
+          }
+          console.log(clusterCnt);
+          res.render("graph", {
+            taskData,
+            coreData,
+            clusters,
+            clusterIDs,
+            clusterCnt,
+          });
         });
       });
     });
