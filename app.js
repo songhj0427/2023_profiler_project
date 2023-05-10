@@ -10,7 +10,7 @@ const kmeans = require("node-kmeans");
 app = express();
 app.set("port", process.env.PORT || 3000);
 
-app.use(express.static("views"));
+app.use(express.static(path.join(__dirname, "views")));
 
 //view engine, mustache으로 설정
 app.engine("html", cons.mustache);
@@ -52,11 +52,6 @@ const upload = multer({
 //get요청이 들어오면 시작화면을 보여줌
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/index.html"));
-});
-
-app.get("*.css", function (req, res, next) {
-  res.setHeader("Content-Type", "text/css");
-  next();
 });
 
 //받은 파일을 multer에 지정된 디렉터리위치에 filename으로 저장함.
