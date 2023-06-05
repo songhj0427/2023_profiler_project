@@ -113,3 +113,24 @@ li {
   color: white;
 }
 /* 버튼 */
+.btn-item {
+  background-color: rgb(0, 0, 0);
+  flex-grow: 1;
+  transition: 0.5s;
+}
+.btn-item:hover {
+  background-color: rgb(179, 17, 17);
+  flex-grow: 1.2;
+}
+.btn-link {
+  display: block;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none; /* 밑줄 없애줌 */
+  text-align: center;
+}
+.btn-link:hover {
+  color: white;
+}

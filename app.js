@@ -32,7 +32,7 @@ connection.connect((err) => {
   console.log("sql과 연결 성공...");
 
   const createQuery = `
-  CREATE TABLE core_stats (
+  CREATE TABLE IF NOT EXISTS core_stats (
     case_number int NOT NULL,
     core_number int NOT NULL,
     task_number int NOT NULL,
@@ -71,7 +71,7 @@ const upload = multer({
 
 //get요청이 들어오면 시작화면을 보여줌
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/index.html"));
+  res.sendFile(path.join(__dirname, "./main.html"));
 });
 
 //받은 파일을 multer에 지정된 디렉터리위치에 filename으로 저장함.

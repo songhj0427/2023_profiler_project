@@ -1,0 +1,88 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald);
+
+.title {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    border: 1px solid #ffffff;
+    width: 1500px;
+    height: 400px;
+    position: relative;
+}
+
+#title-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.file-up {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    border: 1px solid #ffffff;
+    width: 400px;
+    height: 30px;
+    position: relative;
+}
+
+.title-style {
+    font-family: "Oswald", sans-serif;
+    font-size: 10rem;
+}
+
+input[type=file]::file-selector-button {
+    width: 150px;
+    height: 30px;
+    background: #fff;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    cursor: pointer;
+}
+input[type=file]::file-selector-button:hover {
+    background: #000000;
+    color: #fff;
+}
+
+
+.btn {
+    width: 130px;
+    height: 40px;
+    padding: 10px 25px;
+    border: 2px solid #000;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+}
+
+.btn-submit {
+    background: #000;
+   color: #fff;
+   z-index: 1;
+ }
+ .btn-submit:after {
+   position: absolute;
+   content: "";
+   width: 0;
+   height: 100%;
+   top: 0;
+   right: 0;
+   z-index: -1;
+    background: #ffffff;
+   transition: all 0.3s ease;
+ }
+ .btn-submit:hover {
+   color: #000;
+ }
+ .btn-submit:hover:after {
+   left: 0;
+   width: 100%;
+ }
+ .btn-submit:active {
+   top: 2px;
+ }

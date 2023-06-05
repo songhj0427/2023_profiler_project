@@ -22,7 +22,7 @@
             href="#"
             class="TCbtn-link"
             type="button"
-            onclick="showTaskClusterData()"
+            onclick="showTaskData(0)"
           >
             Task1
           </a>
@@ -121,6 +121,29 @@
           >
             Core5
           </a>
+        </li>
+      </ul>
+    </div>
+    <h1 id="unit">Clustering</h1>
+    <div class="tcbutton">
+      <ul class="TCbtn">
+        <li class="btn-item">
+          <a
+            href="#"
+            class="btn-link"
+            type="button"
+            onclick="showTaskClusterData()"
+            >Task Clustering</a
+          >
+        </li>
+        <li class="btn-item">
+          <a
+            href="#"
+            class="btn-link"
+            type="button"
+            onclick="showCoreClusterData()"
+            >Core Clustering</a
+          >
         </li>
       </ul>
     </div>
@@ -312,6 +335,9 @@
         yAxis: {
           text: "Value",
         },
+        legend: {
+          enabled: true,
+        },
         plotOptions: {
           scatter: {
             showInLegend: false,
@@ -324,7 +350,14 @@
               symbol: "circle",
             },
             tooltip: {
-              pointFormat: `TaskNum : {point.x}, CoreNum : {point.coreNum}`,
+              pointFormatter: function () {
+                return (
+                  "TaskNum : " +
+                  (this.x + 1) +
+                  " CoreNum : " +
+                  (this.coreNum + 1)
+                );
+              },
             },
           },
         },
@@ -379,7 +412,14 @@
               symbol: "circle",
             },
             tooltip: {
-              pointFormat: `TaskNum : {point.taskNum}, CoreNum : {point.x}`,
+              pointFormatter: function () {
+                return (
+                  "TaskNum : " +
+                  (this.taskNum + 1) +
+                  " CoreNum : " +
+                  (this.x + 1)
+                );
+              },
             },
           },
         },
