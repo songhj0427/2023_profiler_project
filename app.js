@@ -7,6 +7,7 @@ const readline = require("readline");
 const cons = require("consolidate");
 const kmeans = require("node-kmeans");
 const util = require("util");
+const { error } = require("console");
 
 app = express();
 app.set("port", process.env.PORT || 3000);
@@ -29,6 +30,24 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
   if (err) throw err;
   console.log("sql과 연결 성공...");
+
+  const createQuery = `
+  CREATE TABLE core_stats (
+    case_number int NOT NULL,
+    core_number int NOT NULL,
+    task_number int NOT NULL,
+    data int DEFAULT '0',
+    PRIMARY KEY (case_number, core_number, task_number)
+  )`;
+
+  connection.query(createQuery, (err, res) => {
+    if (err) {
+      console.error("테이블 생성 실패 : ", err);
+      return;
+    }
+
+    console.log("테이블 생성 성공...");
+  });
 });
 
 try {
