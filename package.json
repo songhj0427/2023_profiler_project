@@ -114,6 +114,7 @@
     "typedarray": "^0.0.6",
     "undefsafe": "^2.0.5",
     "unpipe": "^1.0.0",
+    "util": "^0.12.5",
     "util-deprecate": "^1.0.2",
     "utils-merge": "^1.0.1",
     "vary": "^1.1.2",

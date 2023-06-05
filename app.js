@@ -6,16 +6,17 @@ const fs = require("fs");
 const readline = require("readline");
 const cons = require("consolidate");
 const kmeans = require("node-kmeans");
+const util = require("util");
 
 app = express();
 app.set("port", process.env.PORT || 3000);
-
 app.use(express.static(path.join(__dirname, "views")));
 
 //view engine, mustache으로 설정
 app.engine("html", cons.mustache);
 app.set("view engine", "html");
 app.set("views", __dirname + "/views");
+
 //mysql 설정
 const connection = mysql.createConnection({
   host: "localhost",
@@ -44,7 +45,7 @@ const upload = multer({
     },
     filename: (req, file, done) => {
       const ext = path.extname(file.originalname);
-      done(null, path.basename(file.originalname, ext) + ext);
+      done(null, path.basename(file.originalname, ext) + Date.now() + ext);
     },
   }),
 });
@@ -56,7 +57,6 @@ app.get("/", (req, res) => {
 
 //받은 파일을 multer에 지정된 디렉터리위치에 filename으로 저장함.
 app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
-  let vectors = new Array();
   //req.file.originalname
   function processFile(filename) {
     let caseNumber = 0,
@@ -90,7 +90,6 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
               tokens[i],
               tokens[i],
             ];
-            vectors.push([parseInt(tokens[i])]);
             connection.query(sql, values, (err, res) => {
               if (err) {
                 console.error("data 저장에 실패했습니다.");
@@ -118,16 +117,16 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
       connection.query(sql, (error, results, fields) => {
         if (error) console.error("데이터 불러오기에 실패했습니다...");
 
-        let taskMaxData = [];
-        let coreMaxData = [];
-        let taskMinData = [];
-        let coreMinData = [];
-        let taskAvgData = [];
-        let coreAvgData = [];
-        let taskStdData = [];
-        let coreStdData = [];
-        let taskData = [];
-        let coreData = [];
+        let taskMaxData = [],
+          coreMaxData = [],
+          taskMinData = [],
+          coreMinData = [],
+          taskAvgData = [],
+          coreAvgData = [],
+          taskStdData = [],
+          coreStdData = [],
+          taskData = [],
+          coreData = [];
 
         const result = Object.values(results);
 
@@ -148,26 +147,32 @@ app.post("/uploadFile", upload.single("dataFile"), (req, res) => {
         taskData.push(taskMaxData, taskMinData, taskAvgData, taskStdData);
         coreData.push(coreMaxData, coreMinData, coreAvgData, coreStdData);
 
-        kmeans.clusterize(vectors, { k: 5 }, (errClus, resClus) => {
-          let clusters = [],
-            clusterIDs = [],
-            clusterCnt = [];
-          if (errClus) console.error(errClus);
-          else {
-            resClus.sort((a, b) => a.centroid - b.centroid);
-            for (let i = 0; i < resClus.length; i++) {
-              clusters.push(resClus[i].cluster);
-              clusterIDs.push(resClus[i].clusterInd);
-              clusterCnt.push(resClus[i].cluster.length);
+        let vectors = new Array();
+        const sql2 = "SELECT data FROM core_stats";
+        connection.query(sql2, (error2, results2, fields2) => {
+          if (error2) console.error("데이터 불러오기에 실패했습니다...2");
+          vectors = results2.map((result) => [result.data]);
+          kmeans.clusterize(vectors, { k: 5 }, (errClus, resClus) => {
+            let clusters = [],
+              clusterIDs = [],
+              clusterCnt = [];
+            if (errClus) console.error(errClus);
+            else {
+              resClus.sort((a, b) => a.centroid - b.centroid);
+              for (let i = 0; i < resClus.length; i++) {
+                clusters.push(resClus[i].cluster);
+                clusterIDs.push(resClus[i].clusterInd);
+                clusterCnt.push(resClus[i].cluster.length);
+              }
             }
-          }
-          console.log(clusterCnt);
-          res.render("graph", {
-            taskData,
-            coreData,
-            clusters,
-            clusterIDs,
-            clusterCnt,
+            console.log(clusterCnt);
+            res.render("graph", {
+              taskData,
+              coreData,
+              clusters,
+              clusterIDs,
+              clusterCnt,
+            });
           });
         });
       });
